@@ -1,0 +1,50 @@
+﻿IfDefined STEP_HOST
+If Result = 0 Then
+	InputBox "ホスト名を入力してください" "入力"
+	Call INPUT_ERROR
+	STEP_HOST = InputStr
+EndIf
+
+IfDefined STEP_PORT
+If Result = 0 Then
+	InputBox "ポート場号を入力してください" "入力"
+	Call INPUT_ERROR
+	Str2Int STEP_PORT InputStr
+EndIf
+
+IfDefined STEP_USER
+If Result = 0 Then
+	InputBox "ユーザー名を入力してください" "入力"
+	Call INPUT_ERROR
+	STEP_USER = InputStr
+EndIf
+
+IfDefined STEP_PUBLICKEY
+If Result = 0 Then
+	FileNameBox "PUBLICK KEY"
+	Call FILE_ERROR
+	STEP_PUBLICKEY=inputstr
+EndIf
+
+
+SprintF2 COMMAND '%s:%d /ssh /2 /auth=publickey /user=%s /keyfile=%s' STEP_HOST STEP_PORT STEP_USER STEP_PUBLICKEY
+Connect COMMAND
+
+
+
+Exit
+
+; 共通巻数
+:INPUT_ERROR
+	If Result <> 0 Then
+		MessageBox "入力をキャンセルしました" "INFO"
+		End
+	EndIf
+	Return
+
+:FILE_ERROR
+	If Result = 0 Then
+		MessageBox "入力をキャンセルしました" "INFO"
+		End
+	EndIf
+	Return
